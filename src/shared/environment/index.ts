@@ -4,7 +4,7 @@ export const Enviroment = {
   /**
    * define a quantidade de linhas nas listagens
   */
-  LIMITE_DE_LINHAS: 10,
+  LIMITE_DE_LINHAS: 6,
 
   INPUT_DE_BUSCA: 'Pesquisar...',
 
