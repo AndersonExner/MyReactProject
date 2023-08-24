@@ -8,81 +8,39 @@
     },
     {
       "id": 3,
-      "email": "Juca@gmail.com",
+      "email": "ze@gmail.com",
       "cidadeId": 1,
-      "nomeCompleto": "Juca Silva"
+      "nomeCompleto": "ze"
     },
     {
       "id": 4,
-      "email": "Juca@gmail.com",
+      "email": "alberto@gmail.com",
       "cidadeId": 1,
-      "nomeCompleto": "Juca Silva"
+      "nomeCompleto": "alberto"
     },
     {
       "id": 5,
-      "email": "Juca@gmail.com",
+      "email": "lucas@gmail.com",
       "cidadeId": 1,
-      "nomeCompleto": "Juca Silva"
+      "nomeCompleto": "lucas"
     },
     {
       "id": 6,
-      "email": "Juca@gmail.com",
+      "email": "joao@gmail.com",
       "cidadeId": 1,
-      "nomeCompleto": "Juca Silva"
+      "nomeCompleto": "joao"
     },
     {
-      "id": 7,
-      "email": "Juca@gmail.com",
-      "cidadeId": 1,
-      "nomeCompleto": "Juca Silva"
+      "nomeCompleto": "ildo",
+      "email": "ildo@gmail.com",
+      "cidadeId": "1",
+      "id": 7
     },
     {
-      "id": 8,
-      "email": "Juca@gmail.com",
-      "cidadeId": 1,
-      "nomeCompleto": "Juca Silva"
-    },
-    {
-      "id": 9,
-      "email": "Juca@gmail.com",
-      "cidadeId": 1,
-      "nomeCompleto": "Juca Silva"
-    },
-    {
-      "id": 10,
-      "email": "Juca@gmail.com",
-      "cidadeId": 1,
-      "nomeCompleto": "Juca Silva"
-    },
-    {
-      "id": 11,
-      "email": "Juca@gmail.com",
-      "cidadeId": 1,
-      "nomeCompleto": "Juca Silva"
-    },
-    {
-      "id": 12,
-      "email": "Juca@gmail.com",
-      "cidadeId": 1,
-      "nomeCompleto": "Juca Silva"
-    },
-    {
-      "id": 13,
-      "email": "Juca@gmail.com",
-      "cidadeId": 1,
-      "nomeCompleto": "Juca Silva"
-    },
-    {
-      "id": 14,
-      "email": "Juca@gmail.com",
-      "cidadeId": 1,
-      "nomeCompleto": "Juca Silva"
-    },
-    {
-      "id": 15,
-      "email": "Juca@gmail.com",
-      "cidadeId": 1,
-      "nomeCompleto": "Juca Silva"
+      "nomeCompleto": "anderson",
+      "email": "anderson@gmail.com",
+      "cidadeId": "1",
+      "id": 8
     }
   ]
 }
