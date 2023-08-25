@@ -1,12 +1,24 @@
 import React from "react";
 import { useMemo, useEffect, useState } from "react";
+import { Icon, 
+  IconButton,
+  LinearProgress, 
+  Pagination, 
+  Paper, 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableContainer, 
+  TableFooter, TableHead, 
+  TableRow 
+}from "@mui/material";
+
 import { LayoutBaseDePagina } from "../../shared/layouts";
 import { FerramentasDaListagem } from "../../shared/componentes";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { IListagemPessoa, pessoasService } from "../../shared/services/api/pessoas/PessoasService";
 import { userDebounce } from "../../shared/hooks";
-import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
-import { Enviroment } from "../../shared/environment";
+import { Enviroment } from "../../shared/environment"; 
 
 export const ListagemDePessoas: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();

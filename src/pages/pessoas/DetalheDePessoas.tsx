@@ -1,13 +1,14 @@
-import React, { useRef } from "react";
+import React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import * as yup from "yup";
 
 import { LayoutBaseDePagina } from "../../shared/layouts";
 import { FerramentasDeDetalhe } from "../../shared/componentes";
 import { pessoasService } from "../../shared/services/api/pessoas/PessoasService";
-import { Form } from "@unform/web";
-import { FormHandles } from "@unform/core";
-import { VTextField } from "../../shared/forms";
+import { VForm, VTextField, useVForm } from "../../shared/forms";
+
+import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
 
 interface IFormData {
   email: string;
@@ -15,63 +16,95 @@ interface IFormData {
   cidadeId: number;
 }
 
+const formValidationSchema: yup.Schema<IFormData> = yup.object().shape({
+  nomeCompleto: yup.string().required().min(3),
+  email: yup.string().required().email(),
+  cidadeId: yup.number().required(),
+});
+
 export const DetalheDePessoas: React.FC = () => {
   const { id = 'novocadastro' } = useParams<'id'>();
   const navigate = useNavigate();
-
-  const formRef = useRef<FormHandles>(null);
+  const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
 
   const [isLoading, setIsLoading] = useState(false);
   const [nome, setNome] = useState('');
 
-
   useEffect(() => {
-    if(id !== 'novocadastro'){
+    if (id !== 'novocadastro') {
       setIsLoading(true);
 
       pessoasService.getById(Number(id))
-      .then((result) => {
-        setIsLoading(false);
-
-        if(result instanceof Error){
-          alert(result.message);
-          navigate('/pessoas');
-        }else{
-          setNome(result.nomeCompleto)
-          formRef.current?.setData(result)
-        }
-      })
-    }
-  }, [id])
-
-
-  const handleSave = (dados: IFormData ) => {
-    setIsLoading(true);
-
-    if(id === 'novocadastro'){
-      pessoasService
-        .create(dados)
         .then((result) => {
           setIsLoading(false);
 
-          if(result instanceof Error){
+          if (result instanceof Error) {
             alert(result.message);
+            navigate('/pessoas');
           } else {
-            navigate(`/pessoas/detalhe/${result}`);
+            setNome(result.nomeCompleto);
+            formRef.current?.setData(result);
           }
         });
     } else {
-      pessoasService
-        .updateById(Number(id), { id : Number(id), ...dados})
-        .then((result) => {
-          setIsLoading(false);
-
-          if(result instanceof Error){
-            alert(result.message);
-          }
-        });
+      formRef.current?.setData({
+        email: '',
+        cidadeId: '',
+        nomeCompleto: '',
+      });
     }
-  }
+  }, [id]);
+
+  const handleSave = (dados: IFormData) => {
+    formValidationSchema.
+      validate(dados, { abortEarly: false })
+      .then((dadosValidados) => {
+        setIsLoading(true);
+
+        if (id === 'nova') {
+          pessoasService
+            .create(dadosValidados)
+            .then((result) => {
+              setIsLoading(false);
+
+              if (result instanceof Error) {
+                alert(result.message);
+              } else {
+                if (isSaveAndClose()) {
+                  navigate('/pessoas');
+                } else {
+                  navigate(`/pessoas/detalhe/${result}`);
+                }
+              }
+            });
+        } else {
+          pessoasService
+            .updateById(Number(id), { id: Number(id), ...dadosValidados })
+            .then((result) => {
+              setIsLoading(false);
+
+              if (result instanceof Error) {
+                alert(result.message);
+              } else {
+                if (isSaveAndClose()) {
+                  navigate('/pessoas');
+                }
+              }
+            });
+        }
+      })
+      .catch((errors: yup.ValidationError) => {
+        const validationErrors: {[key: string]: string} = {};
+
+        errors.inner.forEach(error => {
+          if (!error.path) return;
+
+          validationErrors[error.path] = error.message;
+        });
+
+        formRef.current?.setErrors(validationErrors);
+      });
+  };
 
   const handleDelete = (id: number) => {
     if (confirm("Excluir registro?")){
@@ -80,7 +113,7 @@ export const DetalheDePessoas: React.FC = () => {
         if (result instanceof Error){
           alert(result.message)
         }else{
-          alert('Registro excluido com sucesso');
+          alert('Registro excluído com sucesso');
           navigate('/pessoas');
         }
       })
@@ -98,20 +131,69 @@ export const DetalheDePessoas: React.FC = () => {
           mostrarBotaoNovo={id !== 'novocadastro'}
           mostrarBotaoSalvarEFechar
 
-          aoClicarEmSalvar={() => formRef.current?.submitForm()}
-          aoClicarEmSalvarEFechar={() => formRef.current?.submitForm()}
+          aoClicarEmSalvar={save}
+          aoClicarEmSalvarEFechar={saveAndClose}
           aoClicarEmApagar={() => handleDelete(Number(id))}
-          aoClicarEmNovo={() =>  navigate('/pessoas/detalhe/nova')}
+          aoClicarEmNovo={() =>  navigate('/pessoas/detalhe/novocadastro')}
           aoClicarEmVoltar={() => navigate('/pessoas')}
         />
       }
     >
 
-      <Form ref={formRef} onSubmit={handleSave}>
-        <VTextField placeholder="Nome Completo" name="nomeCompleto" />
-        <VTextField placeholder="Email" name="email" />
-        <VTextField placeholder="Cidade ID" name="cidadeId" />
-      </Form>
+      <VForm ref={formRef} onSubmit={handleSave}>
+        <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined">
+          
+          <Grid container direction="column" padding={2} spacing={2}>
+
+          {(
+            isLoading && (
+              <Grid item>
+                <LinearProgress/>
+              </Grid>
+            )
+          )}
+
+          <Grid item>
+            <Typography variant="h5">Informações do Cadastro</Typography>
+          </Grid>
+
+            <Grid container item direction="row">
+              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                <VTextField 
+                fullWidth 
+                disabled={isLoading} 
+                label="Nome Completo"
+                placeholder="Nome Completo" 
+                name="nomeCompleto"
+                onChange={e => setNome(e.target.value)} />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction="row">
+              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                <VTextField 
+                fullWidth 
+                disabled={isLoading} 
+                label="Email"
+                placeholder="Email" 
+                name="email" />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction="row">
+              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                <VTextField 
+                fullWidth 
+                disabled={isLoading} 
+                placeholder="Cidade ID" 
+                label="Cidade"
+                name="cidadeId" />
+              </Grid>
+            </Grid>
+
+          </Grid>
+        </Box>
+      </VForm>
 
     </LayoutBaseDePagina>
 
