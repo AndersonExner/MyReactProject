@@ -5,6 +5,12 @@
       "nomeCompleto": "Anderson",
       "email": "anderson@gmail.com",
       "cidadeId": 2
+    },
+    {
+      "nomeCompleto": "Junior Souza",
+      "email": "junior@gmail.com",
+      "cidadeId": 2,
+      "id": 2
     }
   ],
   "cidades": [
