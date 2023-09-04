@@ -10,6 +10,6 @@ export const Enviroment = {
 
   LISTAGEM_VAZIA: 'Nenhum registro encontrado',
 
-  URL_BASE: 'http://localhost:3333',
+  URL_BASE: 'https://my-react-project-rllih0zfb-andersonexner.vercel.app',
 
 }
